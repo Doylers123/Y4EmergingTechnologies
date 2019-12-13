@@ -22,9 +22,9 @@ There are a few necessary installs to be made in order to be able to run:
 * Download This repository by copying the repository link and in your command promt type in git clone followed by the repository link.
 
 * Once it has been cloned, cd into the project folder, then cd into the 'Web-App' folder and type 'python app.py' to run
-*The server application will be listening on http://127.0.0.1:5000/ so copy and paste that into your browser.
-*On the canvas, draw a digit (0-9) and then select the blue Submit button which should then show you a predicted number.
-*Click the reset button to clear the canvas and draw a new digit to get predicted.
+* The server application will be listening on http://127.0.0.1:5000/ so copy and paste that into your browser.
+* On the canvas, draw a digit (0-9) and then select the blue Submit button which should then show you a predicted number.
+* Click the reset button to clear the canvas and draw a new digit to get predicted.
 
 # References
 
