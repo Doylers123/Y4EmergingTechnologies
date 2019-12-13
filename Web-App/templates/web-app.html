@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--Cian Doyle-->
+<!--G00335783-->
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Hand-Written Digit Reader
+    </title>
+
+<!--CSS-->
+    <Style>#canvasDiv {
+        margin: 0px auto;
+        text-align: center;
+        width: 400px;
+        height: 400px;
+        
+      }
+      
+      #canvas {
+        background-color: black;
+      }
+      
+      #buttonDiv {
+        margin: 0px auto;
+        text-align: center;
+        padding: 20px;
+      }
+      
+      #submitBtn {
+        background-color:blue;
+        color: white;
+        text-align: center;
+        font-size: 15px;
+      }
+      
+      #restartBtn {
+        background-color:red;
+        color: white;
+        text-align: center;
+        font-size: 15px;
+      }
+      
+      #prediction {
+        text-align: center;
+      }
+</Style>
+</head>
+<body>
+    <!--Layout-->
+    <div id="canvasDiv">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div id="prediction">
+        <p>Predicted Number:</p>
+        <p id="predictedNumber"></p>
+    </div>
+    <div id="buttonDiv">
+        <button id="submitBtn" onclick="predict()">Submit</button>
+        <button id="restartBtn" onclick="erase()">Clear</button>
+    </div>
+	
+	<script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <!--JavaScript-->
+        <script> 
+        // Creating the canvas element
+        // Placing it in the canvasDiv slot
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+           
+        //Making the canvas
+            var painting = document.getElementById('canvasDiv');
+            var paint_style = getComputedStyle(painting);
+            canvas.width = parseInt(paint_style.getPropertyValue('width'));
+            canvas.height = parseInt(paint_style.getPropertyValue('height'));
+           
+            var mouse = { x: 0, y: 0 };
+           
+            // adding event listener for mouse's movement
+            canvas.addEventListener('mousemove', function (e) {
+                // Adding offset to the mouse so it's drawing position is correct
+                mouse.x = e.pageX - this.offsetLeft;
+                mouse.y = e.pageY - this.offsetTop;
+            }, false);
+           
+            //width of the line
+            ctx.lineWidth = 15;
+            
+           
+            // This will be how the image will be drawn
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+           
+            // colour of the line set to white to match mnist dataset
+            ctx.strokeStyle = '#FFFFFF';
+           
+            // adding event listener for the mouse when it is clicked
+            canvas.addEventListener('mousedown', function (e) {
+                //begin path for the drawing
+                ctx.beginPath();
+                // follow the mouse to draw 
+                ctx.moveTo(mouse.x, mouse.y);
+                canvas.addEventListener('mousemove', onPaint, false);
+            }, false);
+           
+            // Adding event lstener for when the mouse it is no longer clicked
+            canvas.addEventListener('mouseup', function () {
+                canvas.removeEventListener('mousemove', onPaint, false);
+            }, false);
+           
+            // function to draw the line for the canvas
+            var onPaint = function () {
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.stroke();
+            };
+           
+            // function to clear the canvas completely
+            function erase() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+            }
+           
+            // function to save the image created in the canvas
+            function predict() {
+                var canvas = document.getElementById("canvas");
+                var dataURL = canvas.toDataURL();
+                console.log(dataURL);
+           
+                // Using Ajax post method for the image
+                $.ajax({
+                    type: 'POST',
+                    url: '/prediction',
+                    data: {
+                        imgBase64: dataURL
+                    }
+                }).done(function (data) {
+                    // Logging to the console
+                    console.log('SENT');
+                    // sending to the console
+                    console.log(data);
+                    $("#predictedNumber").empty().append(data);
+                });
+            };</script>
+        
+</body>
+
+
+
+</html>
